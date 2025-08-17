@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "10xCards.backend", "10xCards.backend\10xCards.backend.csproj", "{B72D09E2-35FB-4EE5-9A57-56F9E300BF50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "10xCards.backend.Tests", "10xCards.backend.Tests\10xCards.backend.Tests.csproj", "{50735163-4611-BCE3-6685-3AD0F4A0479F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B72D09E2-35FB-4EE5-9A57-56F9E300BF50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B72D09E2-35FB-4EE5-9A57-56F9E300BF50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B72D09E2-35FB-4EE5-9A57-56F9E300BF50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B72D09E2-35FB-4EE5-9A57-56F9E300BF50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50735163-4611-BCE3-6685-3AD0F4A0479F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50735163-4611-BCE3-6685-3AD0F4A0479F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50735163-4611-BCE3-6685-3AD0F4A0479F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50735163-4611-BCE3-6685-3AD0F4A0479F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B069A61-D70C-456A-8600-F2F9E8CA4BC3}
+	EndGlobalSection
+EndGlobal

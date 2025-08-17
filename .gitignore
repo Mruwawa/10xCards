@@ -1,0 +1,7 @@
+﻿10xCards.frontend/node_modules
+10xCards.backend/10xCards.backend.Tests/bin
+10xCards.backend/10xCards.backend.Tests/obj
+10xCards.backend/10xCards.backend/obj
+10xCards.backend/10xCards.backend/bin
+10xCards.backend/.vs
+10xCards.backend/10xCards.backend/appsettings.Development.json
