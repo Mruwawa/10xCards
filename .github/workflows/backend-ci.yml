@@ -1,0 +1,79 @@
+name: Backend CI
+
+on:
+  push:
+    paths:
+      - '10xCards.backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    paths:
+      - '10xCards.backend/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'" \
+          --health-interval=10s \
+          --health-timeout=5s \
+          --health-retries=5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore 10xCards.backend/10xCards.backend.sln
+
+      - name: Build
+        run: dotnet build 10xCards.backend/10xCards.backend.sln --configuration Release --no-restore
+
+      - name: Test
+        env:
+          OpenAI__ApiKey: ${{ secrets.OPENAI_API_KEY || 'sk-dummy' }}
+          Mongo__ConnectionString: mongodb://localhost:27017
+          Mongo__Database: 10xcards_ci
+          Jwt__Key: ${{ secrets.JWT_KEY || 'CHANGE_ME_MIN_32_BYTES_SECRET_KEY_1234567890' }}
+        run: dotnet test 10xCards.backend/10xCards.backend.sln --configuration Release --no-build --logger "trx;LogFileName=test_results.trx" --collect:"XPlat Code Coverage"
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            **/TestResults/*.trx
+            **/coverage.cobertura.xml
+
+      - name: Coverage Summary
+        if: success()
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: '**/coverage.cobertura.xml'
+          badge: true
+          fail_below_min: false
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: '60 80'
+
+      - name: Add Coverage PR Comment
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          recreate: true
+          path: code-coverage-results.md
