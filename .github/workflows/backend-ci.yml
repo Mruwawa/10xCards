@@ -8,6 +8,7 @@ on:
   pull_request:
     paths:
       - '10xCards.backend/**'
+  workflow_dispatch:
 
 jobs:
   build-and-test:
@@ -15,16 +16,6 @@ jobs:
     env:
       DOTNET_NOLOGO: true
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-    services:
-      mongo:
-        image: mongo:7
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'" \
-          --health-interval=10s \
-          --health-timeout=5s \
-          --health-retries=5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,6 +24,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
 
       - name: Restore
         run: dotnet restore 10xCards.backend/10xCards.backend.sln
@@ -43,8 +42,6 @@ jobs:
       - name: Test
         env:
           OpenAI__ApiKey: ${{ secrets.OPENAI_API_KEY || 'sk-dummy' }}
-          Mongo__ConnectionString: mongodb://localhost:27017
-          Mongo__Database: 10xcards_ci
           Jwt__Key: ${{ secrets.JWT_KEY || 'CHANGE_ME_MIN_32_BYTES_SECRET_KEY_1234567890' }}
         run: dotnet test 10xCards.backend/10xCards.backend.sln --configuration Release --no-build --logger "trx;LogFileName=test_results.trx" --collect:"XPlat Code Coverage"
 
